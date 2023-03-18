@@ -1,0 +1,1 @@
+docker run --rm -it -v "C:\Users\kunal-verma\Desktop\node\index.js":index.js  node:alpine

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="btn">CLick me</button>
+    <div id="counter">0</div>
+
+    <input type="text" name="search" id="search" />
+    <script>
+
+const xx={
+    c:9,
+    a:{ aa:1,
+    a2:"22"},
+    b:{
+        b1:{
+            b2:55
+        }
+    }
+}
+const isobj =(yourVariable)=>typeof yourVariable === 'object' && yourVariable !== null;
+function pp(obj,parent) {
+    let x=obj;
+    if (obj && Object.keys(obj).length==0 ) {
+        return {}
+    }
+
+    let y={};
+    for (const key in x) {
+        const element = x[key];
+        let n=key;
+        if (parent) {
+            n=parent+"_"+n;
+        }
+
+        if (isobj(element)) {
+         y=  { ...y ,...pp(element,n)};
+        }
+else{
+   
+    y[n]=element;
+}
+}
+return y;
+}
+        document.getElementById("search").addEventListener("input", e => {
+            let c = e.target.value;
+            bff()(55    );
+
+            // console.log(e);
+            // apicall()
+        });
+        function debounce(fx, delay, ctx, ...args) {
+            let timer = 0;
+            let _this = ctx;
+            let _args = args;
+            return function () {
+                clearTimeout(timer);
+
+                timer = setTimeout(() => {
+                    fx.apply(ctx,[ ctx.input.value]);
+                    f = true;
+                }, delay);
+            }
+        }
+
+        const bff = debounce.bind({},apicall,2000,{input:    document.getElementById("search")});
+        
+        function apicall(input) {
+            return new Promise(r => {
+                setTimeout(() => {
+                    console.log(input);
+                    r(new Array(5).fill(input));
+                }, 500);
+            }).then(z => {
+                console.log(z);
+            })
+        }
+
+        function counter(inc = 1) {
+
+            const c = document.getElementById("counter");
+            c.innerText = inc + Number(c.innerText);
+        }
+
+        function throlle(fx, delay, ctx_this, ...args) {
+            let f = true;
+            let _this = ctx_this;
+            let _args = args;
+            return function () {
+                if (f) {
+                    f = false;
+                    fx.apply(_this, args);
+                    let timer = setTimeout(() => {
+                        f = true;
+                        clearTimeout(timer)
+                    }, delay);
+                }
+            }
+        }
+        const thCounter = throlle(counter, 2000, {}, 5)
+        document.getElementById("btn").addEventListener("click", () => {
+            thCounter()
+        })
+
+    </script>
+</body>
+
+</html>

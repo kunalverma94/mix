@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+
+
+
+  <button id="ss">Start Task</button>
+  <pre id="progress"></pre>
+  <script src="./signalr.min.js"></script>
+
+
+  <script>
+
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("https://localhost:5000/programHub")
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
+      connection.on("thisIsProgress", (percent, status) => {
+        console.log(percent, status);
+      });
+    async function start() {
+      try {
+        await connection.start();
+        console.log("SignalR Connected.");
+      } catch (err) {
+        console.log(err);
+        setTimeout(start, 5000);
+      }
+
+
+    };
+
+    connection.onclose(async () => {
+      await start();
+    });
+
+    // Start the connection.
+    start();
+    document.getElementById("ss").onclick = () => {
+      console.log('percent', 'status');
+
+      try {
+        connection.invoke("WhatIsProgress").then(x=>{
+          console.log('WhatIsProgress');
+        });
+
+
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  </script>
+  <!-- <H1 id="capture">122211</H1>
+  <input type="text" oninput="performSearch(event)">
+
+  <div id="a">a
+    <div id="b">b
+      <div id="c">c
+        <div id="d">d
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div name="" id="some-id" cols="30" rows="10" onclick="foo()"></div>
+  <style>
+    div {
+      border: solid;
+      padding: 1rem;
+      margin: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    #a {
+      background: red;
+    }
+
+    #b {
+      background: blue;
+    }
+
+    #c {
+      background: yellow;
+    }
+
+    #d {
+      background: green;
+    }
+  </style>
+  <script defer src="./index.js"></script> -->
+
+</body>
+
+</html>

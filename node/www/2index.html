@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./signalr.min.js"></script>
+</head>
+<input type="text" name="cc" id="cc">
+<form id="form" name="form" action="/uploader" enctype="multipart/form-data" method="post">
+    <div class="buttons">
+        <div class="upload-button">
+            <div class="label">Click me!</div>
+            <input id="files" name="files" type="file" size="1" multiple onchange="uploadFiles(event);" />
+        </div>
+    </div>
+</form>
+
+<body>
+    <script>
+        var connection;
+        var connectionId;
+
+            connection = new signalR.HubConnectionBuilder().withUrl("http://localhost:5000/webSocketConnection").build();
+
+            connection.start().then(function () {
+                console.log('connected.....');
+            }).catch(function (err) {
+                return console.error(err.toString());
+            });
+            connection.on("connectionId", function (_connectionId) {
+                connectionId = _connectionId;
+                console.log('connectionId', connectionId);
+            });
+            connection.on("ReceiveMessage", function (user, message) {
+                console.log(user, message);
+            });
+
+        function uploadFiles(event) {
+            let files = event.target.files;
+            var formData = new FormData();
+            formData.append('imageFile', files[0]);
+            formData.append('x', connectionId);
+            formData.append('y', 'name2');
+            fetch("http://localhost:5000/api/home/postF", {
+                method: 'post',
+                body: formData,
+            })
+                .then(x => x.text())
+                .then(z => {
+                    console.log(z);
+                })
+
+        }
+        fetch("http://localhost:5000/api/home/post", {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                x: 123,
+                y: "y1y"
+            }),
+        })
+            .then(x => x.text())
+            .then(z => {
+                console.log(z);
+            })
+    </script>
+</body>
+
+</html>
